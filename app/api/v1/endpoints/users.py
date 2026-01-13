@@ -1,0 +1,38 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from app.core.database import get_db
+from app.schemas.user import User, UserCreate, UserUpdate
+from app.services.user_service import user_service
+from typing import List
+
+router = APIRouter()
+
+@router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
+def create_user(user_in: UserCreate, db: Session = Depends(get_db)):
+    # Check if exists logic could be moved to service or here
+    return user_service.create_user(db, user_in)
+
+@router.get("/", response_model=List[User])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return user_service.get_users(db, skip=skip, limit=limit)
+
+@router.get("/{user_id}", response_model=User)
+def read_user(user_id: str, db: Session = Depends(get_db)):
+    user = user_service.get_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+@router.put("/{user_id}", response_model=User)
+def update_user(user_id: str, user_in: UserUpdate, db: Session = Depends(get_db)):
+    user = user_service.get_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user_service.update_user(db, user, user_in)
+
+@router.delete("/{user_id}", response_model=User)
+def delete_user(user_id: str, db: Session = Depends(get_db)):
+    user = user_service.get_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user_service.delete_user(db, user_id)
