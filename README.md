@@ -99,8 +99,8 @@ app/
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/library_db
-# For SQLite use: sqlite:///./library.db
+DATABASE_URL=sqlite:///./library.db
+# For PostgreSQL use: postgresql://user:password@localhost:5432/library_db
 JWT_SECRET_KEY=your-secret-key-here
 FINE_RATE_PER_DAY=50
 DEFAULT_BORROWING_PERIOD=14

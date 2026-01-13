@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Library API"
     
     # DATABASE
-    DATABASE_URL: str
+    DATABASE_URL: str = "sqlite:///./library.db"
     
     # FINES
     FINE_RATE_PER_DAY: float = 50.0
