@@ -1,7 +1,6 @@
 import uuid
 import enum
-from sqlalchemy import Column, DateTime, ForeignKey, Enum
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, DateTime, ForeignKey, Enum, Uuid
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
@@ -14,9 +13,9 @@ class BorrowingStatus(str, enum.Enum):
 class BorrowingRecord(Base):
     __tablename__ = "borrowing_records"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    book_id = Column(UUID(as_uuid=True), ForeignKey("books.id"), nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    id = Column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    book_id = Column(Uuid(as_uuid=True), ForeignKey("books.id"), nullable=False)
+    user_id = Column(Uuid(as_uuid=True), ForeignKey("users.id"), nullable=False)
     borrowed_at = Column(DateTime(timezone=True), default=func.now())
     due_date = Column(DateTime(timezone=True), nullable=False)
     returned_at = Column(DateTime(timezone=True), nullable=True)

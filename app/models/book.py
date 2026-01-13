@@ -1,6 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, Integer, Text, Boolean, DateTime, ForeignKey, Enum
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, String, Integer, Text, Boolean, DateTime, ForeignKey, Enum, Uuid
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
@@ -8,7 +7,7 @@ from app.core.database import Base
 class Book(Base):
     __tablename__ = "books"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String, nullable=False)
     author = Column(String, nullable=False)
     isbn = Column(String, unique=True, nullable=False)

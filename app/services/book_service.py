@@ -5,7 +5,17 @@ from app.schemas.book import BookCreate, BookUpdate
 
 class BookService:
     def create_book(self, db: Session, book_in: BookCreate) -> Book:
-        return book_repository.create(db, book_in)
+        # Before creating, if available_quantity is not set (it's not in Create schema usually),
+        # set it equal to quantity.
+        obj_data = book_in.model_dump()
+        if "available_quantity" not in obj_data:
+            obj_data["available_quantity"] = obj_data["quantity"]
+        
+        db_obj = Book(**obj_data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
 
     def get_book(self, db: Session, book_id) -> Book:
         return book_repository.get(db, book_id)

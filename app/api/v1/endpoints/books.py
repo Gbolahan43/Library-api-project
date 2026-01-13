@@ -4,6 +4,7 @@ from app.core.database import get_db
 from app.schemas.book import Book, BookCreate, BookUpdate
 from app.services.book_service import book_service
 from typing import List
+from uuid import UUID
 
 router = APIRouter()
 
@@ -16,21 +17,21 @@ def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return book_service.get_books(db, skip=skip, limit=limit)
 
 @router.get("/{book_id}", response_model=Book)
-def read_book(book_id: str, db: Session = Depends(get_db)):
+def read_book(book_id: UUID, db: Session = Depends(get_db)):
     book = book_service.get_book(db, book_id)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
     return book
 
 @router.put("/{book_id}", response_model=Book)
-def update_book(book_id: str, book_in: BookUpdate, db: Session = Depends(get_db)):
+def update_book(book_id: UUID, book_in: BookUpdate, db: Session = Depends(get_db)):
     book = book_service.get_book(db, book_id)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
     return book_service.update_book(db, book, book_in)
 
 @router.delete("/{book_id}", response_model=Book)
-def delete_book(book_id: str, db: Session = Depends(get_db)):
+def delete_book(book_id: UUID, db: Session = Depends(get_db)):
     book = book_service.get_book(db, book_id)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")

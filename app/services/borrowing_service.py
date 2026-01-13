@@ -71,10 +71,19 @@ class BorrowingService:
         # If due_date is naive (from DB), make it aware if needed, but usually SQLA handles it if configured.
         # Let's assume UTC.
         
-        if borrowing.returned_at > borrowing.due_date:
+        due_date_check = borrowing.due_date
+        if due_date_check.tzinfo is None:
+            due_date_check = due_date_check.replace(tzinfo=timezone.utc)
+
+        if borrowing.returned_at > due_date_check:
             borrowing.status = BorrowingStatus.OVERDUE
             # Calculate Fine
-            overdue_duration = borrowing.returned_at - borrowing.due_date
+            # Ensure due_date is aware for subtraction
+            due_date_aware = borrowing.due_date
+            if due_date_aware.tzinfo is None:
+                due_date_aware = due_date_aware.replace(tzinfo=timezone.utc)
+            
+            overdue_duration = borrowing.returned_at - due_date_aware
             days_overdue = overdue_duration.days
             if days_overdue > 0:
                 amount = days_overdue * settings.FINE_RATE_PER_DAY
