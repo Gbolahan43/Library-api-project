@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.core.config import settings
 
-DATABASE_URL = settings.DATABASE_URL as str
+DATABASE_URL = settings.DATABASE_URL
 
 # Handle SQLite specific connection args
 connect_args = {}
