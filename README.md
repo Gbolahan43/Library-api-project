@@ -13,6 +13,35 @@
 *   **Schema Validation:** Pydantic
 *   **Migrations:** Alembic
 
+## 📂 Project Architecture
+
+The project follows a layered architecture to separate concerns and improve maintainability:
+
+```text
+app/
+├── api/v1/endpoints/    # Layer 1: HTTP handlers
+│   ├── books.py
+│   ├── borrowing.py
+│   ├── users.py
+│   ├── fines.py
+│   └── sections.py
+│
+├── services/            # Layer 2: Business rules
+│   ├── book_service.py
+│   ├── borrowing_service.py  ← Fine calculation here
+│   ├── user_service.py
+│   └── fine_service.py
+│
+├── repositories/        # Layer 3: Database queries
+│   ├── base.py          ← Generic CRUD
+│   ├── book_repository.py
+│   └── borrowing_repository.py
+│
+├── models/              # SQLAlchemy ORM
+├── schemas/             # Pydantic validation
+└── core/                # Config, database, exceptions
+```
+
 ## ✨ Core Functionalities
 
 ### 📚 Book Management
