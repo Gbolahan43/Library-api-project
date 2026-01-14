@@ -5,6 +5,9 @@ from api_client import api
 def render():
     st.header("💰 Fines Management")
     
+    if "fine_success" in st.session_state:
+        st.success(st.session_state.pop("fine_success"))
+    
     users = api.get("users/")
     user_options = {f"{u['name']} ({u['employee_id']})": u['id'] for u in users} if users else {}
     
@@ -32,7 +35,7 @@ def render():
                         with col2:
                             if st.button("Pay", key=fine['id']):
                                 if api.put(f"fines/{fine['id']}/pay", {"amount_paid": fine['amount'], "payment_method": "Cash"}):
-                                    st.success("Fine paid!")
+                                    st.session_state["fine_success"] = "Fine paid!"
                                     st.rerun()
             else:
                 st.info("No fines recorded for this user.")

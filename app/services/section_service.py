@@ -13,4 +13,7 @@ class SectionService:
     def get_sections(self, db: Session, skip: int = 0, limit: int = 100) -> list[Section]:
         return section_repository.get_multi(db, skip, limit)
 
+    def delete_section(self, db: Session, section_id: int) -> Section:
+        return section_repository.remove(db, section_id)
+
 section_service = SectionService()

@@ -4,6 +4,9 @@ from api_client import api
 
 def render():
     st.header("🔄 Borrowing & Returns")
+    
+    if "borrow_success" in st.session_state:
+        st.success(st.session_state.pop("borrow_success"))
 
     tab1, tab2 = st.tabs(["Borrow Book", "Return Book"])
 
@@ -33,7 +36,7 @@ def render():
                         "borrowing_period_days": days
                     }
                     if api.post("borrowing/", payload):
-                        st.success("Book borrowed successfully!")
+                        st.session_state["borrow_success"] = "Book borrowed successfully!"
                         st.rerun()
 
     with tab2:
@@ -74,7 +77,7 @@ def render():
                         with col3:
                             if st.button("Return", key=loan['id']):
                                 if api.put(f"borrowing/{loan['id']}/return"):
-                                    st.success("Returned successfully!")
+                                    st.session_state["borrow_success"] = "Returned successfully!"
                                     st.rerun()
                         st.divider()
             else:

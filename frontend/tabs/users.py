@@ -4,6 +4,9 @@ from api_client import api
 
 def render():
     st.header("👤 Users Management")
+    
+    if "user_success" in st.session_state:
+        st.success(st.session_state.pop("user_success"))
 
     tab1, tab2 = st.tabs(["View Users", "Register User"])
 
@@ -36,5 +39,5 @@ def render():
                     "employee_id": employee_id
                 }
                 if api.post("users/", payload):
-                    st.success("User registered successfully!")
+                    st.session_state["user_success"] = "User registered successfully!"
                     st.rerun()

@@ -40,6 +40,11 @@ app/
 ├── models/              # SQLAlchemy ORM
 ├── schemas/             # Pydantic validation
 └── core/                # Config, database, exceptions
+
+frontend/                # Streamlit UI
+├── main.py              # App entry point
+├── api_client.py        # Backend connector
+└── tabs/                # Feature modules
 ```
 
 ## ✨ Core Functionalities
@@ -48,6 +53,10 @@ app/
 *   **Add/Update/Delete Books:** Complete lifecycle management for book records.
 *   **Search & Filter:** Retrieve books by ID, section (Sciences, Arts, Social Studies, etc.), or availability.
 *   **Inventory Tracking:** Monitor total and available quantities.
+
+### 🗂️ Sections Management
+*   **Organization:** Create and manage library sections (e.g., Fiction, Bio-graphy).
+*   **Assignment:** Link books to specific sections for better organization.
 
 ### 🔄 Borrowing & Returns
 *   **Check-out:** Record borrowing transactions with customizable due dates (default 14 days).
@@ -89,9 +98,9 @@ app/
     ```bash
     pip install -r requirements.txt
     ```
-    *Note: If `requirements.txt` is not yet generated, install core dependencies manually:*
+    *Note: To run the frontend, ensure you also install streamlit:*
     ```bash
-    pip install fastapi uvicorn sqlalchemy pydantic pydantic-settings psycopg2-binary alembic python-jose[cryptography] passlib[bcrypt] python-multipart
+    pip install streamlit pandas requests
     ```
 
 ### Configuration
@@ -111,16 +120,22 @@ LOG_LEVEL=INFO
 
 ### Running the Application
 
-Start the development server:
+You need to run both the backend (API) and the frontend (UI).
+
+**1. Start the Backend Server:**
 
 ```bash
 uvicorn app.main:app --reload
 ```
-*Note: Adjust `app.main:app` to match your actual application entry point.*
+*API Docs available at: `http://127.0.0.1:8000/docs`*
 
-The API documentation will be available at:
-*   Swagger UI: `http://127.0.0.1:8000/docs`
-*   ReDoc: `http://127.0.0.1:8000/redoc`
+**2. Start the Frontend Interface (New Terminal):**
+
+```bash
+cd frontend
+streamlit run main.py
+```
+*UI accessible at: `http://localhost:8501`*
 
 ## 📡 API Endpoints Overview
 

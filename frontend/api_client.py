@@ -17,7 +17,9 @@ class APIClient:
             try:
                 error_detail = response.json().get("detail", str(e))
             except:
-                pass
+                # If response is not JSON (e.g. 500 HTML or text), use text
+                error_detail = f"{response.status_code} {response.text[:200]}"
+            
             st.error(f"API Error: {error_detail}")
             return None
         except Exception as e:

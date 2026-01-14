@@ -19,7 +19,7 @@ def main():
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio(
         "Go to",
-        ["Home", "Books", "Users", "Borrow/Return", "Fines"]
+        ["Home", "Books", "Sections", "Users", "Borrow/Return", "Fines"]
     )
 
     if selection == "Home":
@@ -28,6 +28,7 @@ def main():
         
         Use the sidebar to navigate to different modules:
         - **Books**: Manage book inventory (Add, View).
+        - **Sections**: Manage library sections/categories.
         - **Users**: Manage library members (Add, View).
         - **Borrow/Return**: Issue books and return them.
         - **Fines**: View and manage overdue fines.
@@ -35,6 +36,10 @@ def main():
         
     elif selection == "Books":
         books.render()
+
+    elif selection == "Sections":
+        from tabs import sections
+        sections.render()
     
     elif selection == "Users":
         users.render()

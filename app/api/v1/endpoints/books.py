@@ -35,7 +35,16 @@ def delete_book(book_id: UUID, db: Session = Depends(get_db)):
     book = book_service.get_book(db, book_id)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
-    return book_service.delete_book(db, book_id)
+    try:
+        return book_service.delete_book(db, book_id)
+    except Exception as e:
+        # Check for foreign key constraint errors
+        if "ForeignKeyConstraint" in str(e) or "constraint failed" in str(e):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cannot delete this book because it is referenced by other records (e.g. borrowing history)."
+            )
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/available", response_model=List[Book])
 def read_available_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

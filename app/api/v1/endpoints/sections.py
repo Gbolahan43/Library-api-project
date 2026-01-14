@@ -9,7 +9,17 @@ router = APIRouter()
 
 @router.post("/", response_model=Section, status_code=status.HTTP_201_CREATED)
 def create_section(section_in: SectionCreate, db: Session = Depends(get_db)):
-    return section_service.create_section(db, section_in)
+    try:
+        return section_service.create_section(db, section_in)
+    except Exception as e:
+        # Check for integrity error (duplicate name)
+        # SQLAlchemy wraps the underlying DB error
+        if "UNIQUE constraint failed" in str(e) or "IntegrityError" in str(type(e).__name__):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Section with this name already exists."
+            )
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/", response_model=List[Section])
 def read_sections(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -21,3 +31,10 @@ def read_section(section_id: int, db: Session = Depends(get_db)):
     if not section:
         raise HTTPException(status_code=404, detail="Section not found")
     return section
+
+@router.delete("/{section_id}", response_model=Section)
+def delete_section(section_id: int, db: Session = Depends(get_db)):
+    section = section_service.get_section(db, section_id)
+    if not section:
+        raise HTTPException(status_code=404, detail="Section not found")
+    return section_service.delete_section(db, section_id)
